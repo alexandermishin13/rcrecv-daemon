@@ -30,7 +30,7 @@
  * GPIORCRECV - Remote control receiver module over GPIO.
  *
  * Remote control receiver module can't be discovered automatically, please
- * specify hints s part of loader or kernel configuration:
+ * specify hints as part of loader or kernel configuration:
  *	hint.rcrecv.0.at="gpiobus0"
  *	hint.rcrecv.0.pins=<PIN>
  *
