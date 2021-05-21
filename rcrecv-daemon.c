@@ -83,8 +83,6 @@ usage()
     fprintf(stderr, "Possible options for method:\n\n");
 }
 
-int i = 0;
-
 /* Signals handler. Prepare the programm for end */
 static void
 termination_handler(int signum)
@@ -196,19 +194,19 @@ main(int argc, char **argv)
     int long_index =0;
     static struct option long_options[] = {
 //        {"status", no_argument,       0, 'v' },
-        {"device", required_argument, 0, 'd' },
-        {"gpio",   required_argument, 0, 'g' },
-        {"set",    required_argument, 0, 's' },
-        {"unset",  required_argument, 0, 'u' },
-        {"toggle", required_argument, 0, 't' },
-        {"help",   required_argument, 0, 'h' },
-        {0, 0, 0, 0}
+	{"device", required_argument, 0, 'd' },
+	{"gpio",   required_argument, 0, 'g' },
+	{"set",    required_argument, 0, 's' },
+	{"unset",  required_argument, 0, 'u' },
+	{"toggle", required_argument, 0, 't' },
+	{"help",   required_argument, 0, 'h' },
+	{0, 0, 0, 0}
     };
 
     SLIST_INIT(&search_switch);
     node = SLIST_FIRST(&search_switch);
 
-    while ((opt = getopt_long(argc, argv, "d:s:t:u:b",long_options,&long_index)) != -1) {
+    while ((opt = getopt_long(argc, argv, "d:s:t:u:bh",long_options,&long_index)) != -1) {
 	switch (opt) {
 	case 'd':
 	    dev_rcrecv = optarg;
@@ -271,16 +269,16 @@ main(int argc, char **argv)
     /* Create kqueue. */
     kq = kqueue();
     if (kq == -1)
-        err(EXIT_FAILURE, "kqueue() failed");
+	err(EXIT_FAILURE, "kqueue() failed");
 
     /* Initialize kevent structure. */
     EV_SET(&event, dev, EVFILT_READ, EV_ADD | EV_CLEAR, 0, 0, NULL);
     /* Attach event to the kqueue. */
     ret = kevent(kq, &event, 1, NULL, 0, NULL);
     if (ret == -1)
-        err(EXIT_FAILURE, "kevent register");
+	err(EXIT_FAILURE, "kevent register");
     if (event.flags & EV_ERROR)
-        errx(EXIT_FAILURE, "Event error: %s", strerror(event.data));
+	errx(EXIT_FAILURE, "Event error: %s", strerror(event.data));
 
     /* Unbinds from terminal if '-b' */
     if (background)
@@ -297,9 +295,9 @@ main(int argc, char **argv)
 	ret = kevent(kq, NULL, 0, &tevent, 1, &timeout);
 	if (ret == -1) {
 	    err(EXIT_FAILURE, "kevent wait");
-	} else if (ret > 0) {
+	}
+	else if (ret > 0) {
 	    ioctl(dev, RCRECV_READ_CODE_INFO, &rcc);
-	    printf("Received code: %lx\n", rcc.value);
 	    node = search_rcc_entry(&rcc.value);
 	    if (node != NULL) {
 		printf("Received code: %lx, pin: %u ", node->code, node->pin);
@@ -307,12 +305,15 @@ main(int argc, char **argv)
 		case 's':
 		    gpio_pin_high(gpioc, node->pin);
 		    printf("is set\n");
+		    break;
 		case 'u':
 		    gpio_pin_low(gpioc, node->pin);
 		    printf("is unset\n");
+		    break;
 		case 't':
 		    gpio_pin_toggle(gpioc, node->pin);
 		    printf("is toggle\n");
+		    break;
 		}
 	    }
 	}
