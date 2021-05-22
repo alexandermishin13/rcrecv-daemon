@@ -32,9 +32,7 @@ load_rc_config $name
 
 : ${rcrecv_daemon_enable:="NO"}
 : ${rcrecv_daemon_flags:="-b"}
-: ${rcrecv_daemon_pidfile:="/var/run/rcrecv-daemon.pid"}
 
-pidfile=${rcrecv_daemon_pidfile}
 rcrecv_daemon_bin="/usr/local/sbin/rcrecv-daemon"
 
 codes_flags=""

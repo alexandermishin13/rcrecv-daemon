@@ -293,26 +293,23 @@ main(int argc, char **argv)
     for (;;) {
 	/* Sleep until a code received */
 	ret = kevent(kq, NULL, 0, &tevent, 1, &timeout);
-	if (ret == -1) {
-	    err(EXIT_FAILURE, "kevent wait");
-	}
-	else if (ret > 0) {
+	if (ret > 0) {
 	    ioctl(dev, RCRECV_READ_CODE_INFO, &rcc);
 	    node = search_rcc_entry(&rcc.value);
+	    printf("Received code: %lx\n", rcc.value);
 	    if (node != NULL) {
-		printf("Received code: %lx, pin: %u ", node->code, node->pin);
 		switch(node->state) {
 		case 's':
 		    gpio_pin_high(gpioc, node->pin);
-		    printf("is set\n");
+		    printf("%d is set\n", node->pin);
 		    break;
 		case 'u':
 		    gpio_pin_low(gpioc, node->pin);
-		    printf("is unset\n");
+		    printf("%d is unset\n", node->pin);
 		    break;
 		case 't':
 		    gpio_pin_toggle(gpioc, node->pin);
-		    printf("is toggle\n");
+		    printf("%d is toggle\n", node->pin);
 		    break;
 		}
 	    }
