@@ -280,6 +280,15 @@ main(int argc, char **argv)
     if (event.flags & EV_ERROR)
 	errx(EXIT_FAILURE, "Event error: %s", strerror(event.data));
 
+    /* If there are dirty kevents read and drop irrelevant data */
+    ret = kevent(kq, NULL, 0, &tevent, 1, &timeout);
+    if (ret == -1) {
+	err(EXIT_FAILURE, "kevent wait");
+    }
+    else if (ret > 0) {
+	ioctl(dev, RCRECV_READ_CODE_INFO, &rcc);
+    }
+
     /* Unbinds from terminal if '-b' */
     if (background)
 	daemonize();
