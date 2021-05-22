@@ -25,3 +25,69 @@
 .Dd May 21, 2021
 .Dt RCRECV-DAEMON 8
 .Os
+.Sh NAME
+.Nm rcrecv-daemon
+.Nd GPIO control daemon for
+.Xr rcrecv-kmod 4
+kernel driver.
+.Sh SYNOPSIS
+.Nm
+.Op Fl b
+.Op Fl d Ar device
+.Op Fl g Ar device
+.Op Fl s Ns | Ns Fl u Ns | Ns Fl t Ar <code> Ns Cm \&: Ns Ar <pin> ...
+.Op Fl h
+.Sh OPTIONS
+The
+.Nm
+supports the following options:
+.Bl -tag -width indent
+.It Fl b
+Daemonize the
+.Nm
+after running;
+.It Fl d , Ic --device Ar device
+Specify a character device. The compiled-in default is
+.Pa /dev/rcrecv Ns ;
+.It Fl g , Ic --gpio Ar device
+Specify a gpio controller. The compiled-in default is
+.Pa /dev/gpioc0 Ns ;
+.It Fl s , Ic --set Ar <code> Ns Cm \&: Ns Ar <pin>
+Set the gpio
+.Ar <pin>
+when the
+.Ar <code>
+is received. Can be used multiple times;
+.It Fl u , Ic --unset Ar <code> Ns Cm \&: Ns Ar <pin>
+Unset the gpio
+.Ar <pin>
+when the
+.Ar <code>
+is received. Can be used multiple times;
+.It Fl t , Ic --toggle Ar <code> Ns Cm \&: Ns Ar <pin>
+Toggle the gpio
+.Ar <pin>
+when the
+.Ar <code>
+is received. Can be used multiple times;
+.It Fl h , Ic --help
+Brief help.
+.Sh DESCRIPTION
+When the daemon is started it interprets
+.Ic --set , --unset
+and
+.Ic --toggle
+parameters to make a list of requested states of pins for each code to receive.
+Then it waits a
+.Xr kevent 2
+from
+.Xr rcrecv 4
+which means that there is a code for it. The daemon gets the code and sets the
+state of the pin stored in the list for that code.
+.Sh SEE ALSO
+.Xr rcrecv 4
+.Sh AUTHORS
+The
+.Nm
+was written by
+.An Alexander Mishin Aq Mt mishin@mh.net.ru .
