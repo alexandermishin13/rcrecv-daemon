@@ -47,29 +47,30 @@ Daemonize the
 .Nm
 after running;
 .It Fl d , Ic --device Ar device
-Specify a character device. The compiled-in default is
+Specify a
+.Xr rcrecv 4
+character device. The compiled-in default is
 .Pa /dev/rcrecv Ns ;
 .It Fl g , Ic --gpio Ar device
 Specify a gpio controller. The compiled-in default is
 .Pa /dev/gpioc0 Ns ;
 .It Fl s , Ic --set Ar <code> Ns Cm \&: Ns Ar <pin>
-Set the gpio
-.Ar <pin>
-when the
-.Ar <code>
-is received. Can be used multiple times;
 .It Fl u , Ic --unset Ar <code> Ns Cm \&: Ns Ar <pin>
-Unset the gpio
-.Ar <pin>
-when the
-.Ar <code>
-is received. Can be used multiple times;
 .It Fl t , Ic --toggle Ar <code> Ns Cm \&: Ns Ar <pin>
-Toggle the gpio
+Set, unset or toggle the gpio
 .Ar <pin>
 when the
 .Ar <code>
-is received. Can be used multiple times;
+is received. The
+.Ar code
+and
+.Ar pin
+format could be either 0x0c1b08 or 793352. Options
+.Fl s , Fl u
+and
+.Fl t
+can be used multiple times
+in any order;
 .It Fl h , Ic --help
 Brief help.
 .Sh DESCRIPTION
@@ -85,7 +86,8 @@ from
 which means that there is a code for it. The daemon gets the code and sets the
 state of the pin stored in the list for that code.
 .Sh SEE ALSO
-.Xr rcrecv 4
+.Xr rcrecv 4 ,
+.Xr gpioctl 8
 .Sh AUTHORS
 The
 .Nm
