@@ -20,8 +20,9 @@ A `rcrecv-daemon` waits in a loop for an event, poll(2) or kqueue(2), from a
 kernel driver `rcrecv.ko` and after it was came reads a code received by the
 driver from its character device. For that codes which was configured for
 some action on a gpio pin the daemon does that action. Possible actions is
-set, unset or toggle a pin. In my case it is the same pin which uses for a
-management of a lights or an air commpressor.
+set, unset or toggle a pin. In my case it is the same pin which uses for an
+automatic management of a lights or an air compressor. An example service
+configuration file is located in a `./rc.conf.d/`.
 
 ## Installation
 
