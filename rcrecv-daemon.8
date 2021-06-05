@@ -74,18 +74,55 @@ in any order;
 .It Fl h , Ic --help
 Brief help.
 .Sh DESCRIPTION
+A
+.Nm
+needs to have a
+.Xr rcrecv 4
+loaded for it to work.
+.br
 When the daemon is started it interprets
 .Ic --set , --unset
 and
 .Ic --toggle
 parameters to make a list of requested states of pins for each code to receive.
-Then it waits a
+Then the daemon waits a
 .Xr kevent 2
 from
 .Xr rcrecv 4
 which means that there is a code for it. The daemon gets the code, seek a pin
 defined for it, configures the pin for output and changes state of that pin
-the way have been defined by the parameters.
+the way have been defined by a corresponding parameter.
+.Sh EXAMPLES
+An example of a
+.Xr service 8
+configuration file looks like:
+.Bd -literal -offset indent
+rcrecv_daemon_enable="YES"
+rcrecv_daemon_codes="0x952e91 0x952e92 0x952e94"
+rcrecv_0x952e91_pin=12
+rcrecv_0x952e91_state="t"
+rcrecv_0x952e92_pin=11
+rcrecv_0x952e92_state="s"
+rcrecv_0x952e94_pin=11
+rcrecv_0x952e94_state="u"
+.Ed
+
+It will lead a
+.Xr service 8
+script to run a daemon with following options:
+.Bd -literal -offset indent
+$ rcrecv-daemon -b -t 0x952e91:12 -s 0x952e92:11 -u 0x952e94:11
+.Ed
+
+Note: If You want to make the
+.Xr service 8
+configuration a file in a
+.Pa rc.conf.d/
+directory, the file must be named
+.Ql rcrecv_daemon
+(with an underscore, not a hyphen).
+.Sh FILES
+/usr/local/etc/rc.d/rcrecv-daemon
 .Sh SEE ALSO
 .Xr rcrecv 4 ,
 .Xr gpioctl 8
