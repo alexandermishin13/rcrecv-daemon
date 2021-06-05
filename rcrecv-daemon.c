@@ -333,9 +333,15 @@ main(int argc, char **argv)
 	    err(EXIT_FAILURE, "kevent wait");
 	}
 	else if (ret > 0) {
+	    /* Get a code from remote control
+	       and search a node for it */
 	    ioctl(dev, RCRECV_READ_CODE_INFO, &rcc);
 	    node = search_rcc_entry(&rcc.value);
-	    if (node != NULL) {
+	    if (node != NULL)
+	    {
+		/* Config a pin from the node for output before change it */
+		gpio_pin_output(gpioc, node->pin);
+		/* Change state of the pin as set in the node */
 		switch(node->state) {
 		case 's':
 		    gpio_pin_high(gpioc, node->pin);
