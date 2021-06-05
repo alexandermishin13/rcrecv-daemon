@@ -79,10 +79,25 @@ SLIST_HEAD(rcc_list, rcc_entry);
 static void
 usage()
 {
-    fprintf(stderr, "usage: %s [-d ctldev] -(s|u|t) <code>:pin [-b] [-h]"
-	"\n\n",
+    fprintf(stderr, "usage: %s [-d <ctldev>] [-g <gpioc>] "
+	"-(s|u|t) <code>:<pin> [-b] [-h]\n\n",
 	getprogname());
-    fprintf(stderr, "Possible options for method:\n\n");
+    fprintf(stderr, 
+	"Options:\n"
+	"    -d, --device=<ctldev>\n"
+	"                         A remote control receiver device name.\n"
+	"                         Default: /dev/rcrecv;\n"
+	"    -g, --gpio=<gpioc>   A gpio controller device name\n"
+	"                         Default: /dev/gpioc0;\n"
+	"    -s, --set=<code>:<pin>\n"
+	"    -u, --unset=<code>:<pin>\n"
+	"    -u, --toggle=<code>:<pin>\n"
+	"                         A way which the <pin> should be changed after the\n"
+	"                         <code> is received;\n"
+	"    -b,                  Run in background as a daemon;\n"
+	"    -h, --help           Print this help.\n"
+    );
+
 }
 
 /* Signals handler. Prepare the programm for end */
@@ -237,7 +252,7 @@ get_param(int argc, char **argv)
 	    /* FALLTHROUGH */
 	default:
 	    usage();
-	    return;
+	    exit(EXIT_SUCCESS);
 	}
     }
     argv += optind;
@@ -356,6 +371,4 @@ main(int argc, char **argv)
 	    }
 	}
     }
-
-    exit(EXIT_SUCCESS);
 }
