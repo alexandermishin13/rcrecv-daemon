@@ -83,8 +83,9 @@ Then it waits a
 .Xr kevent 2
 from
 .Xr rcrecv 4
-which means that there is a code for it. The daemon gets the code and sets the
-state of the pin stored in the list for that code.
+which means that there is a code for it. The daemon gets the code, seek a pin
+defined for it, configures the pin for output and changes state of that pin
+the way have been defined by the parameters.
 .Sh SEE ALSO
 .Xr rcrecv 4 ,
 .Xr gpioctl 8
