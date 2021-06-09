@@ -37,7 +37,6 @@
  * Or configure via FDT data.
  */
 
-#include <libutil.h>
 #include <sys/event.h>
 #include <err.h>
 #include <errno.h>
@@ -51,6 +50,9 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <signal.h>
+#include <syslog.h>
+
+#include <libutil.h>
 #include <libgpio.h>
 
 #include <dev/rcrecv/rcrecv.h>
@@ -368,6 +370,7 @@ main(int argc, char **argv)
 		    gpio_pin_toggle(gpioc, node->pin);
 		    break;
 		}
+		syslog(LOG_INFO, "Receiving code 0x%lX: %c %u\n", node->code, node->state, node->pin);
 	    }
 	}
     }
