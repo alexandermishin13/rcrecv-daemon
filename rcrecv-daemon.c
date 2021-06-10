@@ -283,17 +283,13 @@ main(int argc, char **argv)
     /* Open GPIO controller */
     gpioc = gpio_open_device(dev_gpio);
     //gpio_pin_output(handle, 16);
-    if (gpioc == GPIO_INVALID_HANDLE) {
-	perror("opening GPIO controller device");
-	exit(EXIT_FAILURE);
-    }
+    if (gpioc == GPIO_INVALID_HANDLE)
+	errx(EXIT_FAILURE, "Failed to open '%s'", dev_gpio);
 
     /* Open RCRecv device */
     dev = open(dev_rcrecv, O_RDONLY);
-    if (dev < 0) {
-	perror("opening RC receiver device");
-	exit(EXIT_FAILURE);
-    }
+    if (dev < 0)
+	errx(EXIT_FAILURE, "Failed to open '%s'", dev_rcrecv);
 
     /* Create kqueue. */
     kq = kqueue();
