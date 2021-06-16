@@ -64,16 +64,16 @@ Set, unset or toggle the gpio
 .Ar pin
 when the
 .Ar code
-is received. The
-.Ar code
+is received.
+.Ar Value
 and
-.Ar pin
-format could be either 0x0c1b08 or 793352. Options
+.Ar number
+must be integer constants, with a leading 0x indicating a hexadecimal value and
+a leading 0 indicating an octal value. Options
 .Fl s , Fl u
 and
 .Fl t
-can be used multiple times
-in any order;
+can be used multiple times in any order;
 .It Fl h , Ic --help
 Brief help.
 .Sh DESCRIPTION
