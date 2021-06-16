@@ -35,7 +35,10 @@ kernel driver.
 .Op Fl b
 .Op Fl d Ar device
 .Op Fl g Ar device
-.Op Fl s Ns | Ns Fl u Ns | Ns Fl t Ar <code> Ns Cm \&: Ns Ar <pin> ...
+.Oo
+.Fl s Ns | Ns Fl u Ns | Ns Fl t
+.Ar code Ns = Ns Ar value Ns , Ns Ar pin Ns = Ns Ar number ...
+.Oc
 .Op Fl h
 .Sh OPTIONS
 The
@@ -54,13 +57,13 @@ character device. The compiled-in default is
 .It Fl g , Ic --gpio Ar device
 Specify a gpio controller. The compiled-in default is
 .Pa /dev/gpioc0 Ns ;
-.It Fl s , Ic --set Ar <code> Ns Cm \&: Ns Ar <pin>
-.It Fl u , Ic --unset Ar <code> Ns Cm \&: Ns Ar <pin>
-.It Fl t , Ic --toggle Ar <code> Ns Cm \&: Ns Ar <pin>
+.It Fl s , Ic --set Ar code Ns = Ns Ar value Ns , Ns Ar pin Ns = Ns Ar number
+.It Fl u , Ic --unset Ar code Ns = Ns Ar value Ns , Ns Ar pin Ns = Ns Ar number
+.It Fl t , Ic --toggle Ar code Ns = Ns Ar value Ns , Ns Ar pin Ns = Ns Ar number
 Set, unset or toggle the gpio
-.Ar <pin>
+.Ar pin
 when the
-.Ar <code>
+.Ar code
 is received. The
 .Ar code
 and

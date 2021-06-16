@@ -39,7 +39,7 @@ codes_flags=""
 for code in $rcrecv_daemon_codes; do
 	eval code_pin=\${rcrecv_${code}_pin}
 	eval code_state=\${rcrecv_${code}_state}
-	codes_flags="${codes_flags} -${code_state} ${code}:${code_pin}"
+	codes_flags="${codes_flags} -${code_state} code=${code},pin=${code_pin}"
 done
 
 command=${rcrecv_daemon_bin}

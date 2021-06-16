@@ -197,10 +197,18 @@ add_rcc_entry(rcc_entry_t curnode)
 static void
 get_param(int argc, char **argv)
 {
-    int opt;
+    int ch;
     rcc_entry_t node;
     int long_index =0;
-    char *end, *tmp;
+    char *end;
+
+    char *subopts[] = {
+#define CODE	0
+		"code",
+#define PIN	1
+		"pin",
+	NULL
+    };
 
     static struct option long_options[] = {
 //        {"status", no_argument,       0, 'v' },
@@ -216,8 +224,11 @@ get_param(int argc, char **argv)
     SLIST_INIT(&search_switch);
     node = SLIST_FIRST(&search_switch);
 
-    while ((opt = getopt_long(argc, argv, "d:s:t:u:bh",long_options,&long_index)) != -1) {
-	switch (opt) {
+    extern char *optarg, *suboptarg;
+    char *options, *value;
+
+    while ((ch = getopt_long(argc, argv, "d:s:t:u:bh",long_options,&long_index)) != -1) {
+	switch (ch) {
 	case 'd':
 	    dev_rcrecv = optarg;
 	    break;
@@ -235,20 +246,43 @@ get_param(int argc, char **argv)
 	    node = add_rcc_entry(node);
 
 	    /* Set a pin state */
-	    node->state = opt;
+	    node->state = ch;
 
+	    options = optarg;
+	    while (*options) {
+		switch(getsubopt(&options, subopts, &value)) {
+		case CODE:
+		    if (!value)
+			errx(EXIT_FAILURE, "no code");
+		    node->code = strtoul(value, &end, 0);
+		    break;
+		case PIN:
+		    if (!value)
+			errx(EXIT_FAILURE, "no pin number");
+		    node->pin = strtoul(value, &end, 0);
+		    break;
+		case -1:
+		    if (suboptarg)
+			errx(EXIT_FAILURE, "illegal sub option %s", suboptarg);
+		    else
+			errx(EXIT_FAILURE, "no code neither pin number");
+		    break;
+		}
+	    }
 	    /* Get a code from the argument */
+/*
 	    tmp = strtok(optarg, ":");
 	    if ((tmp == NULL) || (tmp[0] == '-'))
 		errx(EXIT_FAILURE, "Wrong RC code value '%s': -%c <code>:<pin>\n", tmp, opt);
 	    node->code = strtoul(tmp, &end, 0);
-
+*/
 	    /* Get a pin number from the argument */
+/*
 	    tmp = strtok(NULL, ":");
 	    if (tmp == NULL)
 		errx(EXIT_FAILURE, "Wrong pin number '%s': -%c %lu:<pin>\n", tmp, opt, node->code);
 	    node->pin = strtoul(tmp, &end, 0);
-
+*/
 	    break;
 	case 'h':
 	    /* FALLTHROUGH */
