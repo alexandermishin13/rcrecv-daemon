@@ -84,20 +84,20 @@ usage()
     fprintf(stderr, "usage: %s [-d <ctldev>] [-g <gpioc>] "
 	"-(s|u|t) <code>:<pin> [-b] [-h]\n\n",
 	getprogname());
-    fprintf(stderr, 
+    fprintf(stderr,
 	"Options:\n"
 	"    -d, --device=<ctldev>\n"
-	"                         A remote control receiver device name.\n"
-	"                         Default: /dev/rcrecv;\n"
-	"    -g, --gpio=<gpioc>   A gpio controller device name\n"
-	"                         Default: /dev/gpioc0;\n"
-	"    -s, --set=<code>:<pin>\n"
-	"    -u, --unset=<code>:<pin>\n"
-	"    -u, --toggle=<code>:<pin>\n"
-	"                         A way which the <pin> should be changed after the\n"
-	"                         <code> is received;\n"
-	"    -b,                  Run in background as a daemon;\n"
-	"    -h, --help           Print this help.\n"
+	"                        A remote control receiver device name.\n"
+	"                        Default: /dev/rcrecv;\n"
+	"    -g, --gpio=<gpioc>  A gpio controller device name\n"
+	"                        Default: /dev/gpioc0;\n"
+	"    -s, --set code=<code>,pin=<pin>\n"
+	"    -u, --unset code=<code>,pin=<pin>\n"
+	"    -u, --toggle code=<code>,pin=<pin>\n"
+	"                        A way which the <pin> should be changed after the\n"
+	"                        <code> is received;\n"
+	"    -b,                 Run in background as a daemon;\n"
+	"    -h, --help          Print this help.\n"
     );
 
 }
