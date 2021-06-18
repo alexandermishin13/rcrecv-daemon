@@ -71,6 +71,7 @@ typedef struct rcc_entry {
     unsigned long code;
     gpio_pin_t pin;
     char state;
+
     SLIST_ENTRY(rcc_entry) switches;
 } *rcc_entry_t;
 
@@ -82,7 +83,7 @@ static void
 usage()
 {
     fprintf(stderr, "usage: %s [-d <ctldev>] [-g <gpioc>] "
-	"-(s|u|t) <code>:<pin> [-b] [-h]\n\n",
+	"-(s|u|t) code=<code>,pin=<pin> [-b] [-h]\n\n",
 	getprogname());
     fprintf(stderr,
 	"Options:\n"
@@ -197,10 +198,11 @@ add_rcc_entry(rcc_entry_t curnode)
 static void
 get_param(int argc, char **argv)
 {
-    int ch;
+    int ch, long_index = 0;
     rcc_entry_t node;
-    int long_index =0;
-    char *end;
+    extern char *optarg, *suboptarg;
+    char *options, *value, *end;
+
 
     char *subopts[] = {
 #define CODE	0
@@ -216,16 +218,13 @@ get_param(int argc, char **argv)
 	{"gpio",   required_argument, 0, 'g' },
 	{"set",    required_argument, 0, 's' },
 	{"unset",  required_argument, 0, 'u' },
-	{"toggle", required_argument, 0, 't' },
+ 	{"toggle", required_argument, 0, 't' },
 	{"help",   required_argument, 0, 'h' },
 	{0, 0, 0, 0}
     };
 
     SLIST_INIT(&search_switch);
     node = SLIST_FIRST(&search_switch);
-
-    extern char *optarg, *suboptarg;
-    char *options, *value;
 
     while ((ch = getopt_long(argc, argv, "d:s:t:u:bh",long_options,&long_index)) != -1) {
 	switch (ch) {
@@ -269,20 +268,6 @@ get_param(int argc, char **argv)
 		    break;
 		}
 	    }
-	    /* Get a code from the argument */
-/*
-	    tmp = strtok(optarg, ":");
-	    if ((tmp == NULL) || (tmp[0] == '-'))
-		errx(EXIT_FAILURE, "Wrong RC code value '%s': -%c <code>:<pin>\n", tmp, opt);
-	    node->code = strtoul(tmp, &end, 0);
-*/
-	    /* Get a pin number from the argument */
-/*
-	    tmp = strtok(NULL, ":");
-	    if (tmp == NULL)
-		errx(EXIT_FAILURE, "Wrong pin number '%s': -%c %lu:<pin>\n", tmp, opt, node->code);
-	    node->pin = strtoul(tmp, &end, 0);
-*/
 	    break;
 	case 'h':
 	    /* FALLTHROUGH */
