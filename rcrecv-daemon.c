@@ -93,8 +93,8 @@ usage()
 	"                        Default: /dev/rcrecv;\n"
 	"    -g, --gpio=<gpioc>  A gpio controller device name\n"
 	"                        Default: /dev/gpioc0;\n"
-	"    -i, --interval=<ms> A minimal valid interval between received codes\n"
-	"                        If an interval is less than that value the code\n"
+	"    -i, --interval=<ms> A minimal valid interval between repeated codes\n"
+	"                        If an interval is less than that value the next same ones\n"
 	"                        will be ignored. Default value is 1000ms;"
 	"    -s, --set code=<code>,pin=<pin>\n"
 	"    -u, --unset code=<code>,pin=<pin>\n"
@@ -207,7 +207,6 @@ get_param(int argc, char **argv)
     extern char *optarg, *suboptarg;
     char *options, *value, *end;
 
-
     char *subopts[] = {
 #define CODE		0
 		"code",
@@ -296,6 +295,7 @@ main(int argc, char **argv)
     struct timespec timeout;
     const size_t waitms = 10000;
     int64_t last_time = 0;
+    unsigned long last_code = 0;
 
     struct kevent event;    /* Event monitored */
     struct kevent tevent;   /* Event triggered */
@@ -378,9 +378,10 @@ main(int argc, char **argv)
 	       and search a node for it */
 	    ioctl(dev, RCRECV_READ_CODE_INFO, &rcc);
 	    node = search_rcc_entry(&rcc.value);
-	    /* no actions if code is received too fast */
+	    /* No actions if the same code is repeated too fast */
 	    if (node != NULL &&
-		llabs(last_time - rcc.last_time) > (interval * 1000))
+	       (last_code != rcc.value ||
+		llabs(last_time - rcc.last_time) > (interval * 1000)))
 	    {
 		/* Config a pin from the node for output before change it */
 		gpio_pin_output(gpioc, node->pin);
@@ -397,7 +398,9 @@ main(int argc, char **argv)
 		    break;
 		}
 		last_time = rcc.last_time;
-		syslog(LOG_INFO, "Receiving code 0x%lX: %c %u\n", node->code, node->state, node->pin);
+		last_code = rcc.value;
+		syslog(LOG_INFO, "Receiving code 0x%lX: %c %u\n",
+			node->code, node->state, node->pin);
 	    }
 	}
     }
