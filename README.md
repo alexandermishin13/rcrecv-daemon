@@ -16,16 +16,16 @@ a kernel driver and a daemon.
 
 ## Description
 
-A `rcrecv-daemon` waits for a poll(2) or kqueue(2) event from a kernel driver
-`rcrecv.ko` which means that the driver have a code for the daemon. After the
-event is came the daemon reads the code from `/dev/rcrecv` character device.
-For that codes the daemon does the action which was configured when the
-daemon is started.
+A `rcrecv-daemon` listens for a poll(2) or kqueue(2) event from a `rcrecv.ko`
+kernel driver which means that the driver have a code for the daemon. After the
+event occurs the daemon reads the code from character device `/dev/rcrecv`.
+For these codes, the daemon performs the action that was configured when the
+one was started.
 Possible actions are set, unset or toggle a pin. In my case it is the same
 pins which I had configured for an automatic management of lights and an air
 compressor, so that pins can be switched both with `cron` and with a remote
 control.
-If several consecutive codes is all the same, then after the first successive
+If several consecutive codes is all identical, then after the first successive
 code the next ones are ignored if they follows too fast. The minimum interval
 between two identical codes is 1000ms and can be changed. This prevents the
 relay from switching too quickly when the remote control button is held
