@@ -296,6 +296,7 @@ main(int argc, char **argv)
     const size_t waitms = 10000;
     int64_t last_time = 0;
     unsigned long last_code = 0;
+    char *action;
 
     struct kevent event;    /* Event monitored */
     struct kevent tevent;   /* Event triggered */
@@ -388,19 +389,22 @@ main(int argc, char **argv)
 		/* Change state of the pin as set in the node */
 		switch(node->state) {
 		case 's':
+		    action = "Set";
 		    gpio_pin_high(gpioc, node->pin);
 		    break;
 		case 'u':
+		    action = "Unset";
 		    gpio_pin_low(gpioc, node->pin);
 		    break;
 		case 't':
+		    action = "Toggle";
 		    gpio_pin_toggle(gpioc, node->pin);
 		    break;
 		}
 		last_time = rcc.last_time;
 		last_code = rcc.value;
-		syslog(LOG_INFO, "Receiving code 0x%lX: %c %u\n",
-			node->code, node->state, node->pin);
+		syslog(LOG_INFO, "Received code 0x%lX: %s pin %u\n",
+			node->code, action, node->pin);
 	    }
 	}
     }
