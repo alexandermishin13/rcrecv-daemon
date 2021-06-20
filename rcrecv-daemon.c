@@ -66,6 +66,7 @@ int dev;
 gpio_handle_t gpioc;
 struct pidfh *pfh;
 bool background = false;
+unsigned long interval = 1000; // Minimal interval between codes is 1s
 
 typedef struct rcc_entry {
     unsigned long code;
@@ -82,7 +83,7 @@ SLIST_HEAD(rcc_list, rcc_entry);
 static void
 usage()
 {
-    fprintf(stderr, "usage: %s [-d <ctldev>] [-g <gpioc>] "
+    fprintf(stderr, "usage: %s [-d <ctldev>] [-g <gpioc>] [-i <ms>]"
 	"-(s|u|t) code=<code>,pin=<pin> [-b] [-h]\n\n",
 	getprogname());
     fprintf(stderr,
@@ -92,6 +93,9 @@ usage()
 	"                        Default: /dev/rcrecv;\n"
 	"    -g, --gpio=<gpioc>  A gpio controller device name\n"
 	"                        Default: /dev/gpioc0;\n"
+	"    -i, --interval=<ms> A minimal valid interval between received codes\n"
+	"                        If an interval is less than that value the code\n"
+	"                        will be ignored. Default value is 1000ms;"
 	"    -s, --set code=<code>,pin=<pin>\n"
 	"    -u, --unset code=<code>,pin=<pin>\n"
 	"    -u, --toggle code=<code>,pin=<pin>\n"
@@ -205,21 +209,22 @@ get_param(int argc, char **argv)
 
 
     char *subopts[] = {
-#define CODE	0
+#define CODE		0
 		"code",
-#define PIN	1
+#define PIN		1
 		"pin",
 	NULL
     };
 
     static struct option long_options[] = {
 //        {"status", no_argument,       0, 'v' },
-	{"device", required_argument, 0, 'd' },
-	{"gpio",   required_argument, 0, 'g' },
-	{"set",    required_argument, 0, 's' },
-	{"unset",  required_argument, 0, 'u' },
- 	{"toggle", required_argument, 0, 't' },
-	{"help",   required_argument, 0, 'h' },
+	{"device",   required_argument, 0, 'd' },
+	{"gpio",     required_argument, 0, 'g' },
+	{"interval", required_argument, 0, 'i' },
+	{"set",      required_argument, 0, 's' },
+	{"unset",    required_argument, 0, 'u' },
+ 	{"toggle",   required_argument, 0, 't' },
+	{"help",     required_argument, 0, 'h' },
 	{0, 0, 0, 0}
     };
 
@@ -233,6 +238,9 @@ get_param(int argc, char **argv)
 	    break;
 	case 'g':
 	    dev_gpio = optarg;
+	    break;
+	case 'i':
+	    interval = strtoul(optarg, &end, 0);
 	    break;
 	case 'b':
 	    background = true;
@@ -286,7 +294,8 @@ main(int argc, char **argv)
     rcc_entry_t node;
 
     struct timespec timeout;
-    const int waitms = 10000;
+    const size_t waitms = 10000;
+    int64_t last_time = 0;
 
     struct kevent event;    /* Event monitored */
     struct kevent tevent;   /* Event triggered */
@@ -369,7 +378,9 @@ main(int argc, char **argv)
 	       and search a node for it */
 	    ioctl(dev, RCRECV_READ_CODE_INFO, &rcc);
 	    node = search_rcc_entry(&rcc.value);
-	    if (node != NULL)
+	    /* no actions if code is received too fast */
+	    if (node != NULL &&
+		llabs(last_time - rcc.last_time) > (interval * 1000))
 	    {
 		/* Config a pin from the node for output before change it */
 		gpio_pin_output(gpioc, node->pin);
@@ -385,6 +396,7 @@ main(int argc, char **argv)
 		    gpio_pin_toggle(gpioc, node->pin);
 		    break;
 		}
+		last_time = rcc.last_time;
 		syslog(LOG_INFO, "Receiving code 0x%lX: %c %u\n", node->code, node->state, node->pin);
 	    }
 	}

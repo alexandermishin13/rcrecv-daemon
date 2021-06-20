@@ -1,4 +1,5 @@
 rcrecv_daemon_enable="YES"
+#rcrecv_daemon_flags="--interval 1000 -b"
 rcrecv_daemon_codes="0x952e91 0x952e92 0x952e94"
 rcrecv_0x952e91_pin=12
 rcrecv_0x952e91_state="t"
