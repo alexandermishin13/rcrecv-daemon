@@ -37,7 +37,7 @@ First of all You need a kernel driver `rcrecv.ko` (see above) installed.
 See its `README.md` to build, install, configure and load it.
 
 Then You can build and install the daemon:
-```
+```shell
 make
 sudo make install
 ```
@@ -49,7 +49,7 @@ copy it as `rcrecv_daemon` (underscore, not a hyphen) to
 school).
 
 You can read alse man pages of the daemon and kernel driver:
-```
+```shell
 man 8 rcrecv-daemon
 man 4 rcrecv
 ```
