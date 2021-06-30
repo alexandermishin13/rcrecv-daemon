@@ -222,7 +222,7 @@ get_param(int argc, char **argv)
 	{"interval", required_argument, 0, 'i' },
 	{"set",      required_argument, 0, 's' },
 	{"unset",    required_argument, 0, 'u' },
- 	{"toggle",   required_argument, 0, 't' },
+	{"toggle",   required_argument, 0, 't' },
 	{"help",     required_argument, 0, 'h' },
 	{0, 0, 0, 0}
     };
@@ -283,8 +283,6 @@ get_param(int argc, char **argv)
 	    exit(EXIT_SUCCESS);
 	}
     }
-    argv += optind;
-    argc -= optind;
 }
 
 int
