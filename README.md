@@ -1,6 +1,6 @@
-# rcreceiver
+# rcrecv-daemon
 
-FreeBSD RC receiver daemon for my gpiorcrecv-kmod driver.
+FreeBSD RC receiver daemon for the rcrecv-kmod driver.
 
 ## About
 
