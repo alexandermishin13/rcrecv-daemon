@@ -1,12 +1,12 @@
-# rcreceiver
+# rcrecv-daemon
 
-FreeBSD RC receiver daemon for my gpiorcrecv-kmod driver.
+FreeBSD RC receiver daemon for the rcrecv-kmod driver.
 
 ## About
 
 The daemon is designed to interact with a `rcrecv.ko` kernel driver.
 You can get the driver from there
-[gpiorerecv-kmod](https://gitlab.com/alexandermishin13/gpiorcrecv-kmod).
+[rcrecv-kmod](https://gitlab.com/alexandermishin13/rcrecv-kmod).
 I wrote them both for my aquariums. Their light and air managed by another my
 project [relay-pi-webui](https://gitlab.com/alexandermishin13/relay-pi-webui).
 But once I think it would be good to have a remote control to turn the light

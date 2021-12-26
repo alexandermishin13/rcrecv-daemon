@@ -60,13 +60,13 @@
 #define DEVICE_GPIOC  "/dev/gpioc0"
 #define DEVICE_RCRECV "/dev/rcrecv"
 
-char *dev_rcrecv = DEVICE_RCRECV;
-char *dev_gpio = DEVICE_GPIOC;
-int dev;
-gpio_handle_t gpioc;
-struct pidfh *pfh;
-bool background = false;
-unsigned long interval = 1000; // Minimal interval between codes is 1s
+static const char *dev_rcrecv = DEVICE_RCRECV;
+static const char *dev_gpio = DEVICE_GPIOC;
+static int dev;
+static gpio_handle_t gpioc;
+static struct pidfh *pfh;
+static bool background = false;
+static unsigned long interval = 1000; // Minimal interval between codes is 1s
 
 typedef struct rcc_entry {
     uint32_t code;
@@ -76,9 +76,9 @@ typedef struct rcc_entry {
     SLIST_ENTRY(rcc_entry) switches;
 } *rcc_entry_t;
 
-struct rcc_list search_switch;
-
 SLIST_HEAD(rcc_list, rcc_entry);
+
+static struct rcc_list search_switch;
 
 static void
 usage()
