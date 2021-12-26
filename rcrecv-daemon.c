@@ -69,7 +69,7 @@ static bool background = false;
 static unsigned long interval = 1000; // Minimal interval between codes is 1s
 
 typedef struct rcc_entry {
-    unsigned long code;
+    uint32_t code;
     gpio_pin_t pin;
     char state;
 
@@ -162,7 +162,7 @@ daemonize(void)
 
 /* Adds new code map entry */
 static rcc_entry_t
-search_rcc_entry(const unsigned long *code)
+search_rcc_entry(const uint32_t *code)
 {
     rcc_entry_t node, tmpnode = NULL;
 
@@ -293,7 +293,7 @@ main(int argc, char **argv)
     struct timespec timeout;
     const size_t waitms = 10000;
     int64_t last_time = 0;
-    unsigned long last_code = 0;
+    uint32_t last_code = 0;
     char *action;
 
     struct kevent event;    /* Event monitored */
