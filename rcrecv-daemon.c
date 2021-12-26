@@ -69,7 +69,7 @@ bool background = false;
 unsigned long interval = 1000; // Minimal interval between codes is 1s
 
 typedef struct rcc_entry {
-    unsigned long code;
+    uint32_t code;
     gpio_pin_t pin;
     char state;
 
@@ -162,20 +162,18 @@ daemonize(void)
 
 /* Adds new code map entry */
 static rcc_entry_t
-search_rcc_entry(const unsigned long *code)
+search_rcc_entry(const uint32_t *code)
 {
-    rcc_entry_t node, tmpnode = NULL;
+    rcc_entry_t node;
 
     SLIST_FOREACH(node, &search_switch, switches)
     {
-	printf("code: %lu, pin: %u, state: %c\n", node->code, node->pin, node->state);
-	if (node->code == *code) {
-	    tmpnode = node;
-	    break;
-	}
+	printf("code: %u, pin: %u, state: %c\n", node->code, node->pin, node->state);
+	if (node->code == *code)
+	    return (node);
     }
 
-    return node;
+    return (NULL);
 }
 
 /* Adds new code map entry */
@@ -293,7 +291,7 @@ main(int argc, char **argv)
     struct timespec timeout;
     const size_t waitms = 10000;
     int64_t last_time = 0;
-    unsigned long last_code = 0;
+    uint32_t last_code = 0;
     char *action;
 
     struct kevent event;    /* Event monitored */
@@ -401,7 +399,7 @@ main(int argc, char **argv)
 		}
 		last_time = rcc.last_time;
 		last_code = rcc.value;
-		syslog(LOG_INFO, "Received code 0x%lX: %s pin %u\n",
+		syslog(LOG_INFO, "Received code 0x%X: %s pin %u\n",
 			node->code, action, node->pin);
 	    }
 	}
