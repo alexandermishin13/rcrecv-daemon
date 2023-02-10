@@ -19,7 +19,7 @@
 #
 # rcrecv_daemon_codes="XXX YYY"
 # rcrecv_XXX_pin=<pin1>
-# rcrecv_XXX_state=[s|u|t] # set|unset|toggle
+# rcrecv_XXX_state=[s|u|t] # set|unset|toggle. Default is "t"
 # rcrecv_YYY_pin=<pin2>
 # rcrecv_YYY_state=[s|u|t]
 
@@ -37,8 +37,8 @@ rcrecv_daemon_bin="/usr/local/sbin/rcrecv-daemon"
 
 codes_flags=""
 for code in $rcrecv_daemon_codes; do
-	eval code_pin=\${rcrecv_${code}_pin}
-	eval code_state=\${rcrecv_${code}_state}
+	eval code_pin="\${rcrecv_${code}_pin}"
+	eval code_state="\${rcrecv_${code}_state:-t}"
 	codes_flags="${codes_flags} -${code_state} code=${code},pin=${code_pin}"
 done
 

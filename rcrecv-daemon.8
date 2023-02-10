@@ -101,7 +101,7 @@ the way have been defined by a corresponding parameter.
 .Sh EXAMPLES
 An example of a
 .Xr service 8
-configuration file looks like:
+configuration file looks like this:
 .Bd -literal -offset indent
 rcrecv_daemon_enable="YES"
 rcrecv_daemon_codes="0x952e91 0x952e92 0x952e94"
@@ -113,9 +113,9 @@ rcrecv_0x952e94_pin=11
 rcrecv_0x952e94_state="u"
 .Ed
 
-It will lead a
+It will make the
 .Xr service 8
-script to run a daemon with following options:
+script to run the daemon with following options:
 .Bd -literal -offset indent
 $ rcrecv-daemon -b -t 0x952e91:12 -s 0x952e92:11 -u 0x952e94:11
 .Ed
