@@ -289,7 +289,7 @@ main(int argc, char **argv)
     rcc_entry_t node;
 
     struct timespec timeout;
-    const size_t waitms = 10000;
+    const size_t waitms = 1000;
     int64_t last_time = 0;
     uint32_t last_code = 0;
     char *action;
